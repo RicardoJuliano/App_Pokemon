@@ -17,5 +17,5 @@
 **A reforçar:** Compose (state, recomposição), Navigation Compose, ViewModel/StateFlow, Room, Retrofit, coroutines
 
 ## Decisões tomadas
-- Stack definida no `tutor pokemon.md`
+- Stack definida no `CLAUDE.md`
 - `minSdk` do projeto estava em 29; decidido voltar para 24, conforme o plano
