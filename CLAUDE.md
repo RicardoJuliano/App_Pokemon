@@ -71,19 +71,19 @@ Ao concluir uma fase, faça **3 perguntas de entrevista** sobre o que foi constr
 
 ## Decisões técnicas já tomadas
 
-| Peça | Escolha |
-|---|---|
-| Linguagem | Kotlin |
-| UI | Jetpack Compose (Material 3) |
-| Estado | ViewModel + StateFlow |
-| Assíncrono | Coroutines |
-| Rede | Retrofit + kotlinx.serialization |
-| Banco local | Room |
-| Imagens | Coil (com pré-carregamento para offline) |
-| Navegação | Navigation Compose |
+| Peça | Escolha                                                               |
+|---|-----------------------------------------------------------------------|
+| Linguagem | Kotlin                                                                |
+| UI | Jetpack Compose (Material 3)                                          |
+| Estado | ViewModel + StateFlow                                                 |
+| Assíncrono | Coroutines                                                            |
+| Rede | Retrofit + kotlinx.serialization                                      |
+| Banco local | Room                                                                  |
+| Imagens | Coil (com pré-carregamento para offline)                              |
+| Navegação | Navigation Compose                                                    |
 | DI | Manual, via uma classe `AppContainer` (sem Hilt, para caber no prazo) |
-| Testes | JUnit no motor de batalha |
-| minSdk | 24 |
+| Testes | JUnit no motor de batalha                                             |
+| minSdk | 26                                                                    |
 
 **Arquitetura:** MVVM com Repository, offline-first.
 
