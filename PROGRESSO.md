@@ -18,4 +18,4 @@
 
 ## Decisões tomadas
 - Stack definida no `CLAUDE.md`
-- `minSdk` do projeto estava em 29; decidido voltar para 24, conforme o plano
+- `minSdk` do projeto estava em 29; decidido voltar para 26, conforme o plano
