@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId = "com.game.app_pokemon"
-        minSdk = 29
+        minSdk = 26
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
