@@ -83,7 +83,7 @@ Ao concluir uma fase, faça **3 perguntas de entrevista** sobre o que foi constr
 | Navegação | Navigation Compose                                                    |
 | DI | Manual, via uma classe `AppContainer` (sem Hilt, para caber no prazo) |
 | Testes | JUnit no motor de batalha                                             |
-| minSdk | 26                                                                    |
+| minSdk | 25                                                                    |
 
 **Arquitetura:** MVVM com Repository, offline-first.
 
