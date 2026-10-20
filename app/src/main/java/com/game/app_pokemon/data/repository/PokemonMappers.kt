@@ -2,9 +2,7 @@ package com.game.app_pokemon.data.repository
 
 import com.game.app_pokemon.data.local.PokemonEntity
 import com.game.app_pokemon.data.remote.PokemonDetailDto
-import com.game.app_pokemon.data.remote.StatDto
-import com.game.app_pokemon.data.remote.StatInfoDto
-import kotlin.collections.List
+import com.game.app_pokemon.domain.Pokemon
 
 fun PokemonDetailDto.toEntity(): PokemonEntity {
 
@@ -20,6 +18,14 @@ fun PokemonDetailDto.toEntity(): PokemonEntity {
         specialDefense = stat("special-defense"),
         speed = stat("speed"),
         types = types.joinToString(",") { it.type.name }
+    )
+}
+
+
+fun PokemonEntity.toDomain(): Pokemon {
+    return Pokemon(
+        id= id,
+        name = name
     )
 }
 
