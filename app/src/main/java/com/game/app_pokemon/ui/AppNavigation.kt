@@ -9,6 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.game.app_pokemon.domain.Fighter
 import com.game.app_pokemon.domain.Pokemon
+import com.game.app_pokemon.ui.list.ListRoute
 import com.game.app_pokemon.ui.result.ResultScreen
 
 @Composable
@@ -17,14 +18,8 @@ fun AppNavigation() {
 
     NavHost(navController = navController, startDestination = "list") {
         composable("list") {
-            ListScreen(
-                pokemons = listOf(
-                    Pokemon(1, "Bulbasaur"),
-                    Pokemon(2, "Ivysaur"),
-                    Pokemon(3, "Venusaur"),
-                    Pokemon(4, "Charmander"),
-                    Pokemon(5, "Charmeleon")
-                ), onPokemonClick = { navController.navigate("battle") })
+            ListRoute(onPokemonClick = { navController.navigate("battle") })
+
         }
         composable("battle") {
             BattleScreen(
