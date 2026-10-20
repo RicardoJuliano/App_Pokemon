@@ -22,15 +22,20 @@ import com.game.app_pokemon.domain.Pokemon
 import com.game.app_pokemon.ui.theme.App_PokemonTheme
 
 @Composable
+// Tela burra (stateless): só desenha a lista recebida e avisa o clique por callback.
+// Por isso funciona no Preview com dados falsos, sem internet e sem ViewModel.
 fun ListScreen( pokemons:List<Pokemon>,
                 onPokemonClick: (Pokemon) -> Unit){
+    // Lista rolável que só desenha os itens visíveis (importante para 151 itens com imagem).
     LazyColumn {
         items(pokemons) { pokemon ->
 
+                // Uma linha da lista (imagem + nome). O clique fica no Row para a linha toda responder ao toque.
                 Row(verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.clickable { onPokemonClick(pokemon) }
                 ) {
                 AsyncImage(
+                    // Coil baixa a imagem em segundo plano e guarda em cache.
                     model = pokemon.imageUrl,
                     contentDescription = pokemon.name,
                     modifier = Modifier.size(64.dp)

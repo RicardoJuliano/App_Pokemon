@@ -8,16 +8,20 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.game.app_pokemon.domain.Pokemon
 
 @Composable
+// Camada que liga o ViewModel à tela: lê o estado e decide o que mostrar (carregando, erro ou lista).
 fun ListRoute(
     onPokemonClick: (Pokemon) -> Unit,
     viewModel: ListViewModel = viewModel()
 ) {
+    // Transforma o StateFlow em estado do Compose: quando o ViewModel muda o estado, a tela recompõe sozinha.
     val state by viewModel.state.collectAsState()
 
+    // Cobre os 3 estados possíveis; como o estado é 'sealed', o compilador exige todos.
     when (val current = state) {
 
         is ListUiState.Loading -> Text("Carregando")
         is ListUiState.Error -> Text(current.message)
+        // Só aqui a tela de lista entra em cena: ela recebe a lista pronta e nem sabe que existem carregando/erro.
         is ListUiState.Success -> ListScreen(
             pokemons = current.pokemons,
             onPokemonClick = onPokemonClick

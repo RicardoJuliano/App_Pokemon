@@ -14,13 +14,17 @@ import com.game.app_pokemon.ui.result.ResultScreen
 
 @Composable
 fun AppNavigation() {
+    // Controlador de navegação: guarda a pilha de telas e permite ir para outra (navigate) ou voltar.
     val navController = rememberNavController()
 
+    // Mapa de telas do app: cada 'composable("rota")' associa um endereço (texto) a uma tela.
+    // O app abre na rota "list".
     NavHost(navController = navController, startDestination = "list") {
         composable("list") {
             ListRoute(onPokemonClick = { navController.navigate("battle") })
 
         }
+        // Batalha e resultado ainda usam dados falsos; serão ligados ao motor de batalha depois.
         composable("battle") {
             BattleScreen(
                 player = Fighter(
@@ -39,6 +43,7 @@ fun AppNavigation() {
             ResultScreen(
                 title = "Resultado",
                 message = "Você venceu as 3 batalhas!",
+                // Volta até a lista, descartando batalha e resultado da pilha (em vez de empilhar outra lista).
                 onPlayAgain = { navController.popBackStack("list", inclusive = false) })
         }
     }
