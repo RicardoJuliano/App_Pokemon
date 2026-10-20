@@ -1,3 +1,4 @@
+package com.game.app_pokemon.data.repository
 import com.game.app_pokemon.data.remote.PokemonDetailDto
 import com.game.app_pokemon.data.remote.SpriteDto
 import com.game.app_pokemon.data.remote.StatDto
@@ -18,21 +19,31 @@ class PokemonMappersTest {
             sprites = SpriteDto(frontDefault = null),
             stats = listOf(
                 StatDto(baseStat = 45, stat = StatInfoDto("hp")),
-                StatDto(baseStat = ____, stat = StatInfoDto("attack")),
-                // ... defense, special-attack, special-defense, speed
+                StatDto(baseStat = 100, stat = StatInfoDto("attack")),
+                StatDto(baseStat = 100, stat = StatInfoDto("special-attack")),
+                StatDto(baseStat = 100, stat = StatInfoDto("defense")),
+                StatDto(baseStat = 100, stat = StatInfoDto("special-defense")),
+                StatDto(baseStat = 100, stat = StatInfoDto("speed"))
+
+
             ),
             types = listOf(
                 TypeDto(TypeInfoDto("grass")),
-                TypeDto(TypeInfoDto("____"))
+                TypeDto(TypeInfoDto("green"))
             )
         )
 
         // 2. EXECUTAR
-        val entity = dto.to()
+        val entity = dto.toEntity()
 
         // 3. CONFERIR
         assertEquals("bulbasaur", entity.name)
         assertEquals(45, entity.hp)
-        // special attack, speed e types
+        assertEquals(100, entity.specialAttack)
+        assertEquals(100, entity.speed)
+        assertEquals("grass,green", entity.types)
+        assertEquals(100, entity.defense)
+        assertEquals(100, entity.specialDefense)
+
     }
 }
