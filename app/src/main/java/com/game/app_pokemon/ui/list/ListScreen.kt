@@ -2,6 +2,8 @@ package com.game.app_pokemon.ui.list
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Surface
@@ -11,8 +13,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
 import com.game.app_pokemon.domain.Pokemon
 import com.game.app_pokemon.ui.theme.App_PokemonTheme
 
@@ -21,8 +26,21 @@ fun ListScreen( pokemons:List<Pokemon>,
                 onPokemonClick: (Pokemon) -> Unit){
     LazyColumn {
         items(pokemons) { pokemon ->
-            Text(text = pokemon.name,
-                modifier = Modifier.clickable{onPokemonClick(pokemon)})
+
+                Row(verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.clickable { onPokemonClick(pokemon) }
+                ) {
+                AsyncImage(
+                    model = pokemon.imageUrl,
+                    contentDescription = pokemon.name,
+                    modifier = Modifier.size(64.dp)
+
+
+                )
+                Text(text = pokemon.name)
+            }
+
+
         }
     }
 }
