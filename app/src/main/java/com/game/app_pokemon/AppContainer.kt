@@ -11,18 +11,19 @@ import com.game.app_pokemon.data.repository.PokemonRepository
 // (um banco só evita conflito de escrita no mesmo arquivo). O Context é necessário para o Room achar onde salvar.
 class AppContainer(context: Context) {
     // lazy: só é criado na primeira vez que alguém usa (parecido com um useMemo que roda uma vez).
+    // private: as telas só devem conhecer o Repository, nunca o banco direto.
     private val database: PokemonDatabase by lazy {
         Room.databaseBuilder(
             context,
             PokemonDatabase::class.java,
-            "cardapio.db" // nome do arquivo do banco no aparelho
+            "pokemon.db"
         ).build()
     }
     // O Repository recebe as peças pelo construtor (injeção de dependência manual).
     val pokemonRepository: PokemonRepository by lazy {
         PokemonRepository(
             api = PokeApiClient.api,
-            dao = database.pokemonDao() // o Room gera a implementação do DAO
+            dao = database.pokemonDao()
         )
     }
 }
