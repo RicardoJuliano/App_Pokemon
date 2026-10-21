@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.game.app_pokemon.data.local.PokemonDatabase
 import com.game.app_pokemon.data.remote.PokeApiClient
+import com.game.app_pokemon.data.repository.ImagePreloader
 import com.game.app_pokemon.data.repository.PokemonRepository
 
 class AppContainer(context: Context) {
@@ -17,7 +18,8 @@ class AppContainer(context: Context) {
     val pokemonRepository: PokemonRepository by lazy {
         PokemonRepository(
             api = PokeApiClient.api,
-            dao = database.pokemonDao()
+            dao = database.pokemonDao(),
+            imagePreloader = ImagePreloader(context)
         )
     }
 }
