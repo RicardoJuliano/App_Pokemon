@@ -6,7 +6,6 @@ import com.game.app_pokemon.data.remote.StatInfoDto
 import com.game.app_pokemon.data.remote.TypeDto
 import com.game.app_pokemon.data.remote.TypeInfoDto
 import junit.framework.TestCase.assertEquals
-import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class PokemonMappersTest {
@@ -45,6 +44,7 @@ class PokemonMappersTest {
         assertEquals("grass,poison", entity.types)
         assertEquals(101, entity.defense)
         assertEquals(102, entity.specialDefense)
+        assertEquals(100, entity.attack)
 
     }
 }
