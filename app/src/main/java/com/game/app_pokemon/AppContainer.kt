@@ -11,7 +11,7 @@ class AppContainer(context: Context) {
         Room.databaseBuilder(
             context,
             PokemonDatabase::class.java,
-            "cardapio.db"
+            "pokemon.dp"
         ).build()
     }
     val pokemonRepository: PokemonRepository by lazy {
