@@ -6,12 +6,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.game.app_pokemon.domain.Pokemon
+import com.game.app_pokemon.ui.AppViewModelProvider
 
 @Composable
 fun ListRoute(
     onPokemonClick: (Pokemon) -> Unit,
-    viewModel: ListViewModel = viewModel()
-) {
+    viewModel: ListViewModel = viewModel(factory = AppViewModelProvider.Factory)
+){
     val state by viewModel.state.collectAsState()
 
     when (val current = state) {
