@@ -1,9 +1,9 @@
 # PROGRESSO — Desafio Pokémon Android
 
 ## Estado atual
-- **Dia 3 fechado — app offline-first completo (dados e imagens), download em paralelo com limite e tela de erro com "Tentar de novo"; quiz de revisão dos Dias 1 a 3: 22/27**
-- Progresso estimado do projeto: ~55%
-- O app hoje: na 1ª abertura baixa os 151 Pokémon em paralelo (máx. 10 por vez), pré-carrega as 151 imagens em paralelo e salva no Room; nas aberturas seguintes lê tudo do banco e do cache, **sem internet**. Sem dados e sem internet: tela de erro com botão que tenta de novo (testado no PAX). Batalha e resultado ainda usam dados falsos.
+- **Dia 4 em andamento — motor de batalha escrito (sem testes por decisão dele); falta ligar ao jogo (adversários, estado da partida, telas)**
+- Progresso estimado do projeto: ~65%
+- O app hoje: lista dos 151 offline com imagens, tela de erro com retry. No `domain`: `Combatant`, `DamageCalculator`, `BattleAction` e `BattleEngine` (ações, IA do adversário, turno completo). Batalha e resultado na tela ainda usam dados falsos (motor ainda não está ligado às telas).
 
 ## Tarefas concluídas
 **Dia 1**
@@ -36,11 +36,19 @@
 - [x] Tela de erro com botão "Tentar novamente" (`retry()` põe `Loading` primeiro), testada no PAX
 - [x] Quiz de revisão Dias 1 a 3 (27 perguntas): 22 acertos
 
+**Dia 4**
+- [x] `Combatant` imutável (`takeDamage`, `heal`, `hpMax`, `isFainted`)
+- [x] `DamageCalculator` com `Random` injetável e `toDouble()` antes da divisão
+- [x] `BattleAction` (`sealed interface`)
+- [x] `BattleEngine`: `performAction`, IA do adversário (cura abaixo de 30%) e `playTurn` (ordem por `speed`, `TurnResult`, `BattleOutcome`)
+- [ ] Testes do motor (adiados por decisão dele; voltar se sobrar tempo)
+
 ## Próxima tarefa
-1. **Dia 4:** motor de batalha em Kotlin puro (`domain`), com `Random` injetável e testes JUnit (fórmulas no CLAUDE.md).
-2. Depois: fluxo das 3 batalhas ligado às telas (avisar quando chegar a 65%).
-3. Re-testar o modo avião depois de uns 10 minutos (possível cabeçalho de cache curto do GitHub nas imagens).
-4. Sugestão: colocar `.idea/` no `.gitignore`.
+1. Ligar o motor ao jogo: dar os atributos ao `Pokemon` da lista e converter para `Combatant`.
+2. Gerar os 3 adversários (nomes inventados, Pokémon sorteados sem repetir o do jogador).
+3. ViewModel da partida (batalha atual, nº da batalha, log) e telas de batalha, vitória e Game Over com dados reais.
+4. Decidir e documentar no README se o HP do jogador é restaurado entre batalhas.
+5. Pendentes menores: `require(amount >= 0)` no `takeDamage`; `defense = 0`; re-testar modo avião após ~10 min; `.idea/` no `.gitignore`.
 
 ## Conceitos
 **Dominados:** Kotlin básico, noções de frontend (JS/React), state hoisting, navegação, DTOs e Retrofit básico, estados com `sealed interface`, diferença entre `suspend` e `runBlocking`
@@ -50,6 +58,8 @@
 **Dominados (quiz 22/27):** Repository, DI/AppContainer/Factory/`by lazy`, Semaphore, `async` x `launch`, `coroutineScope`, retry/Loading, Git `pull --rebase`
 
 **A reforçar (erros do quiz):** recomposição (só reexecuta quem lê o estado), `suspend` = não bloqueia a thread (não é cache), `@Entity` = tabela (DTO = JSON), `OnConflictStrategy.REPLACE` = substitui a linha inteira, Coil `execute()` devolve `ErrorResult` sem lançar (por isso o `throw`); `launch` também propaga erro ao `coroutineScope` (não é `async` que traz o erro)
+
+**Dia 4 — a reforçar:** `Int / Int` corta a parte decimal (usar `toDouble()` antes); campo errado em `copy` (`hp` x `currentHp`); copiar exemplo sem adaptar (valores e nomes); `when` com `=` devolve valor, com `{}` precisa de `return`; classes e objetos em PascalCase
 
 **Antigos a reforçar:** sintaxe do cabeçalho de classe (parâmetros do construtor x corpo), `by lazy`, `private` no container (expor o mínimo), `collectAsState`, coroutines (`viewModelScope`), por que testar com valores distintos, injeção de dependência
 
@@ -66,6 +76,13 @@
 - `count() == 0` mantido (em vez de `< 151`): download tudo-ou-nada, ciente do risco de banco incompleto.
 - O `.idea_backup/` fica fora do Git (`.git/info/exclude`).
 - Pré-carregar as imagens antes do `insertAll`: se a internet cair no meio, nada é salvo e o app tenta tudo de novo (tudo-ou-nada).
+
+- Poder dos ataques = 35 (constante `ATTACK_POWER`): com `hpMax` ~120 e razão ataque/defesa ~1, a batalha dura ~3 a 5 golpes e o dano supera a cura (24).
+- Cura recupera 20% do `hpMax`; a IA do adversário só cura abaixo de 30% do `hpMax` e se tiver curas (não sorteia a cura).
+- Empate de `speed`: o jogador age primeiro.
+- Sem curas: `heal()` devolve o próprio lutador (situação normal); o log diz que não há curas.
+- Testes do motor adiados por decisão dele (prioridade: fluxo completo).
+- Estilo de condução direto registrado no `CLAUDE.md` e nas preferências (lógica completa, sem etapas só para compilar).
 
 ## Dificuldades e aprendizados
 - `libs.versions.toml` e `build.gradle.kts` precisam ser commitados juntos.
