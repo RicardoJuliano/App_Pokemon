@@ -2,12 +2,18 @@ package com.game.app_pokemon.domain
 
 import kotlin.random.Random
 
+// Poder fixo dos dois ataques (físico e especial). Escolhido pela conta: hpMax ~120, razão ataque/defesa ~1,
+// então o dano fica perto de 35 x 0,85..1,0 (~30 a 35): batalha de uns 4 golpes e dano maior que a cura (24).
 private const val ATTACK_POWER = 35
 
+// Resultado de UMA ação: quem agiu, quem recebeu e a frase do log. Ambos já atualizados (cópias novas).
 data class ActionResult(val actor: Combatant, val target: Combatant, val log: String)
 
+// Estado da batalha depois do turno: continua, jogador venceu ou adversário venceu.
 enum class BattleOutcome { ONGOING, PLAYER_WON, OPPONENT_WON }
 
+// Resultado de um turno inteiro: os dois lutadores novos, o log do turno e o estado da batalha.
+// Sempre o jogador primeiro e o adversário depois.
 data class TurnResult(
     val player: Combatant,
     val opponent: Combatant,
@@ -15,10 +21,14 @@ data class TurnResult(
     val outcome: BattleOutcome
 )
 
+// Motor da batalha: Kotlin puro, sem Android. Recebe o DamageCalculator e o Random pelo construtor
+// (injeção) para poder ser testado com valores previsíveis.
 class BattleEngine(
     private val damageCalculator: DamageCalculator,
     private val random: Random
 ) {
+    // Executa uma ação e devolve o resultado. O when sobre a sealed interface não tem else:
+    // o compilador sabe que as três ações cobrem tudo. Nada é alterado no lugar: sempre cópias novas.
     fun performAction(actor: Combatant, target: Combatant, action: BattleAction): ActionResult =
         when (action) {
             BattleAction.PhysicalAttack -> {
@@ -44,6 +54,7 @@ class BattleEngine(
             }
 
             BattleAction.Heal -> {
+                // Se a cura não aconteceu (sem curas), o lutador é igual ao de antes: a data class compara por valor.
                 val healedActor = actor.heal()
                 val log = if (healedActor == actor) {
                     "${actor.name} não tem mais curas!"
@@ -56,6 +67,8 @@ class BattleEngine(
 
         }
 
+    // IA do adversário: cura se a vida está abaixo de 30% do máximo e ainda tem curas;
+    // senão sorteia entre ataque físico e especial.
     private fun chooseOpponentAction(opponent: Combatant): BattleAction {
         val isLowHp = opponent.currentHp < opponent.hpMax * 30 / 100
         return if (isLowHp && opponent.healsLeft > 0) {
@@ -66,6 +79,9 @@ class BattleEngine(
             BattleAction.SpecialAttack
         }
     }
+
+    // Um turno completo. Quem tem maior speed age primeiro (empate: o jogador).
+    // Se o primeiro golpe derrota o alvo, o outro lutador não age e a batalha acaba.
     fun playTurn(player: Combatant, opponent: Combatant, playerAction: BattleAction): TurnResult {
         val opponentAction = chooseOpponentAction(opponent)
 
