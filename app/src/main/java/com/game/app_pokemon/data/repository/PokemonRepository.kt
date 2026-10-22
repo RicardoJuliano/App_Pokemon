@@ -5,11 +5,13 @@ import com.game.app_pokemon.data.local.PokemonDao
 import com.game.app_pokemon.data.remote.PokeApiService
 import com.game.app_pokemon.domain.Pokemon
 
+
 // Repository: o ViewModel pede "me dá os Pokémon" e não sabe se vieram do banco ou da internet.
-// api e dao entram pelo construtor (injeção de dependência): assim dá para trocá-los por falsos em testes.
+// api, dao e imagePreloader entram pelo construtor (injeção de dependência): assim dá para trocá-los por falsos em testes.
 class PokemonRepository(
     private val api: PokeApiService,
-    private val dao: PokemonDao
+    private val dao: PokemonDao,
+    private val imagePreloader: ImagePreloader
 ) {
     // suspend: faz rede e banco, então não pode rodar na thread principal.
     suspend fun getPokemons(): List<Pokemon> {
@@ -25,7 +27,12 @@ class PokemonRepository(
                 // 1 chamada por Pokémon (os atributos de batalha só vêm no detalhe); DTO -> Entity.
                 api.getPokemonDetail(id).toEntity()
             }
-            // Só salva depois de baixar tudo: se a internet cair no meio, nada fica pela metade.
+            // Baixa as 151 imagens para o cache do Coil, para a lista funcionar offline com as fotos.
+            // Vem ANTES do insertAll: se a internet cair no meio, nada é salvo e o app tenta tudo de novo na próxima abertura.
+            imagePreloader.preload(
+                entities.map{it.toDomain().imageUrl}
+            )
+            // Só salva depois de baixar tudo (dados e imagens): nada fica pela metade.
             dao.insertAll(entities)
         }
         // Sempre devolve do banco (fonte única da verdade): primeira vez e offline mostram o mesmo.
