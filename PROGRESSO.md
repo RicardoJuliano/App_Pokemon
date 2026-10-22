@@ -1,9 +1,9 @@
 # PROGRESSO — Desafio Pokémon Android
 
 ## Estado atual
-- **Dia 3 quase fechado — o app já funciona 100% offline (dados e imagens) depois do primeiro uso; faltam limitar a concorrência do download e a tela de erro com "Tentar de novo"**
-- Progresso estimado do projeto: ~50%
-- O app hoje: na 1ª abertura baixa os 151 Pokémon (152 chamadas, em fila, demora), pré-carrega as 151 imagens e salva no Room; nas aberturas seguintes lê tudo do banco e do cache, **sem internet** (testado no PAX: dados do app limpos, Wi-Fi desligado, todas as imagens apareceram). Batalha e resultado ainda usam dados falsos.
+- **Dia 3 fechado — app offline-first completo (dados e imagens), download em paralelo com limite e tela de erro com "Tentar de novo"; quiz de revisão dos Dias 1 a 3: 22/27**
+- Progresso estimado do projeto: ~55%
+- O app hoje: na 1ª abertura baixa os 151 Pokémon em paralelo (máx. 10 por vez), pré-carrega as 151 imagens em paralelo e salva no Room; nas aberturas seguintes lê tudo do banco e do cache, **sem internet**. Sem dados e sem internet: tela de erro com botão que tenta de novo (testado no PAX). Batalha e resultado ainda usam dados falsos.
 
 ## Tarefas concluídas
 **Dia 1**
@@ -31,19 +31,27 @@
 - [x] `AppViewModelProvider` (Factory) e `ListViewModel` recebendo o Repository
 - [x] Lista funcionando offline no PAX (2ª abertura com Wi-Fi desligado)
 - [x] `ImagePreloader` (Coil): pré-carrega as 151 imagens antes de salvar no banco; offline com imagens validado no PAX
+- [x] Download dos detalhes em paralelo com `Semaphore(10)` + `coroutineScope` + `async/awaitAll`
+- [x] Pré-carregamento de imagens em paralelo (`launch` + `Semaphore`)
+- [x] Tela de erro com botão "Tentar novamente" (`retry()` põe `Loading` primeiro), testada no PAX
+- [x] Quiz de revisão Dias 1 a 3 (27 perguntas): 22 acertos
 
 ## Próxima tarefa
-1. Limitar a concorrência do download (coroutines em paralelo com limite, ex.: `Semaphore`), hoje são 152 chamadas e 151 imagens em fila.
-2. Tela de erro com botão "Tentar de novo" (sem dados e sem internet).
-3. Perguntas de entrevista da fase 3 (inclui: por que o `preload` vem antes do `insertAll`; por que o `ErrorResult` é verificado à mão).
-4. Re-testar o modo avião depois de uns 10 minutos (possível cabeçalho de cache curto do GitHub nas imagens).
+1. **Dia 4:** motor de batalha em Kotlin puro (`domain`), com `Random` injetável e testes JUnit (fórmulas no CLAUDE.md).
+2. Depois: fluxo das 3 batalhas ligado às telas (avisar quando chegar a 65%).
+3. Re-testar o modo avião depois de uns 10 minutos (possível cabeçalho de cache curto do GitHub nas imagens).
+4. Sugestão: colocar `.idea/` no `.gitignore`.
 
 ## Conceitos
 **Dominados:** Kotlin básico, noções de frontend (JS/React), state hoisting, navegação, DTOs e Retrofit básico, estados com `sealed interface`, diferença entre `suspend` e `runBlocking`
 
 **Dominados também:** papel do Repository (fonte única da verdade, esconde banco x rede), por que a Factory existe, Room guarda texto e Coil guarda imagem
 
-**A reforçar:** sintaxe do cabeçalho de classe (parâmetros do construtor x corpo), `by lazy`, `private` no container (expor o mínimo), `collectAsState`, coroutines (`viewModelScope`), por que testar com valores distintos, injeção de dependência
+**Dominados (quiz 22/27):** Repository, DI/AppContainer/Factory/`by lazy`, Semaphore, `async` x `launch`, `coroutineScope`, retry/Loading, Git `pull --rebase`
+
+**A reforçar (erros do quiz):** recomposição (só reexecuta quem lê o estado), `suspend` = não bloqueia a thread (não é cache), `@Entity` = tabela (DTO = JSON), `OnConflictStrategy.REPLACE` = substitui a linha inteira, Coil `execute()` devolve `ErrorResult` sem lançar (por isso o `throw`); `launch` também propaga erro ao `coroutineScope` (não é `async` que traz o erro)
+
+**Antigos a reforçar:** sintaxe do cabeçalho de classe (parâmetros do construtor x corpo), `by lazy`, `private` no container (expor o mínimo), `collectAsState`, coroutines (`viewModelScope`), por que testar com valores distintos, injeção de dependência
 
 ## Decisões tomadas
 - `minSdk = 25`: o aparelho de teste (PAX A930) tem Android 7.1.1. O ícone adaptativo foi movido para `mipmap-anydpi-v26` para o app instalar nele.
