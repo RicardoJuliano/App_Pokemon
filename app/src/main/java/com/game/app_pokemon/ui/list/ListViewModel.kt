@@ -10,10 +10,16 @@ import kotlinx.coroutines.launch
 class ListViewModel(
     private val repository: PokemonRepository,
 
-): ViewModel() {
+    ) : ViewModel() {
     private val _state = MutableStateFlow<ListUiState>(ListUiState.Loading)
     val state: StateFlow<ListUiState> = _state
+
     init {
+        load()
+    }
+
+    fun retry() {
+        _state.value = ListUiState.Loading
         load()
     }
 
