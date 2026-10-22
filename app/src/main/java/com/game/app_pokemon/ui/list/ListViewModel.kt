@@ -12,13 +12,21 @@ import kotlinx.coroutines.launch
 class ListViewModel(
     private val repository: PokemonRepository,
 
-): ViewModel() {
+    ) : ViewModel() {
     // Versão privada e mutável: só o ViewModel pode escrever o estado. Começa em Loading.
     private val _state = MutableStateFlow<ListUiState>(ListUiState.Loading)
     // Versão pública e somente leitura: a tela só observa (fluxo de dados em uma direção).
     val state: StateFlow<ListUiState> = _state
+
     // Assim que o ViewModel é criado, já começa a carregar a lista.
     init {
+        load()
+    }
+
+    // Chamada pela tela quando o usuário toca em "Tentar de novo".
+    // Volta para Loading antes: a tela troca na hora e o botão some, evitando toques repetidos e downloads duplicados.
+    fun retry() {
+        _state.value = ListUiState.Loading
         load()
     }
 

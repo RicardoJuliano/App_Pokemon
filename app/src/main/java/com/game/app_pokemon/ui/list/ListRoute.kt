@@ -1,5 +1,7 @@
 package com.game.app_pokemon.ui.list
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -21,8 +23,12 @@ fun ListRoute(
     // Cobre os 3 estados possíveis; como o estado é 'sealed', o compilador exige todos.
     when (val current = state) {
 
-        is ListUiState.Loading -> Text("Carregando")
-        is ListUiState.Error -> Text(current.message)
+        is ListUiState.Loading ->Column  {Text("Carregando") }
+        // Erro: mostra a mensagem e um botão. O clique só avisa o ViewModel (a tela não decide como recarregar).
+        is ListUiState.Error -> Column {
+            Text(current.message)
+            Button(onClick = {viewModel.retry()}) {Text("Tentar Novamente") }
+        }
         // Só aqui a tela de lista entra em cena: ela recebe a lista pronta e nem sabe que existem carregando/erro.
         is ListUiState.Success -> ListScreen(
             pokemons = current.pokemons,
