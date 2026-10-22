@@ -1,9 +1,9 @@
 # PROGRESSO — Desafio Pokémon Android
 
 ## Estado atual
-- **Dia 3 em andamento — Room + Repository ligados à lista; falta pré-carregar as imagens e limitar a concorrência do download**
-- Progresso estimado do projeto: ~46%
-- O app hoje: na 1ª abertura baixa os 151 Pokémon (152 chamadas, em fila, demora), salva no Room e mostra a lista; nas aberturas seguintes lê do banco e a lista aparece **sem internet** (testado no PAX com Wi-Fi desligado). As **imagens** ainda dependem do cache do Coil (só aparecem as já vistas). Batalha e resultado ainda usam dados falsos.
+- **Dia 3 quase fechado — o app já funciona 100% offline (dados e imagens) depois do primeiro uso; faltam limitar a concorrência do download e a tela de erro com "Tentar de novo"**
+- Progresso estimado do projeto: ~50%
+- O app hoje: na 1ª abertura baixa os 151 Pokémon (152 chamadas, em fila, demora), pré-carrega as 151 imagens e salva no Room; nas aberturas seguintes lê tudo do banco e do cache, **sem internet** (testado no PAX: dados do app limpos, Wi-Fi desligado, todas as imagens apareceram). Batalha e resultado ainda usam dados falsos.
 
 ## Tarefas concluídas
 **Dia 1**
@@ -30,12 +30,13 @@
 - [x] `AppContainer` + `PokemonApp` (Application registrada no manifesto)
 - [x] `AppViewModelProvider` (Factory) e `ListViewModel` recebendo o Repository
 - [x] Lista funcionando offline no PAX (2ª abertura com Wi-Fi desligado)
+- [x] `ImagePreloader` (Coil): pré-carrega as 151 imagens antes de salvar no banco; offline com imagens validado no PAX
 
 ## Próxima tarefa
-1. Pré-carregar as 151 imagens (Coil `ImageLoader` + `ImageRequest`) logo após o primeiro download, para o modo avião funcionar de verdade. Testar no PAX.
-2. Limitar a concorrência do download (coroutines em paralelo com limite, ex.: `Semaphore`), hoje são 152 chamadas em fila.
-3. Tela de erro com botão "Tentar de novo" (sem dados e sem internet).
-4. Perguntas de entrevista da fase 3.
+1. Limitar a concorrência do download (coroutines em paralelo com limite, ex.: `Semaphore`), hoje são 152 chamadas e 151 imagens em fila.
+2. Tela de erro com botão "Tentar de novo" (sem dados e sem internet).
+3. Perguntas de entrevista da fase 3 (inclui: por que o `preload` vem antes do `insertAll`; por que o `ErrorResult` é verificado à mão).
+4. Re-testar o modo avião depois de uns 10 minutos (possível cabeçalho de cache curto do GitHub nas imagens).
 
 ## Conceitos
 **Dominados:** Kotlin básico, noções de frontend (JS/React), state hoisting, navegação, DTOs e Retrofit básico, estados com `sealed interface`, diferença entre `suspend` e `runBlocking`
@@ -56,6 +57,7 @@
 - Injeção de dependência manual: `AppContainer` na `Application` cria banco e Repository uma vez; `AppViewModelProvider` (Factory) entrega o Repository ao ViewModel.
 - `count() == 0` mantido (em vez de `< 151`): download tudo-ou-nada, ciente do risco de banco incompleto.
 - O `.idea_backup/` fica fora do Git (`.git/info/exclude`).
+- Pré-carregar as imagens antes do `insertAll`: se a internet cair no meio, nada é salvo e o app tenta tudo de novo (tudo-ou-nada).
 
 ## Dificuldades e aprendizados
 - `libs.versions.toml` e `build.gradle.kts` precisam ser commitados juntos.
