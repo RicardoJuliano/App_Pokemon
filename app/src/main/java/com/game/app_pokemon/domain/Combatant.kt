@@ -33,10 +33,14 @@ data class Combatant(
         return copy(currentHp = newHp)
     }
 
+    // Cura 20% do hpMax, sem passar do máximo, e gasta 1 uso.
+    // Sem curas sobrando é situação normal do jogo: devolve o próprio lutador, sem mudar nada.
+    // Atenção: a soma usa currentHp (vida atual), não hp (stat base da API, que nunca muda).
     fun heal(): Combatant {
         if (healsLeft <= 0) return this
 
 
+        // Multiplica antes de dividir: com Int, 20 / 100 daria 0.
         val healAmount = hpMax * 20 / 100
 
 
