@@ -40,6 +40,14 @@ Suba um degrau de cada vez, só se o anterior não bastar:
 4. **Trecho parcial** — mostre no chat (não no arquivo) um pedaço pequeno com lacunas `// TODO` para ele completar.
 5. **Modo socorro** — só se ele pedir explicitamente ("modo socorro") ou estiver travado há muito tempo: mostre a solução daquele trecho no chat e, em seguida, **peça que ele explique linha por linha** com as próprias palavras antes de seguir.
 
+### Estilo de condução (pedido do Ricardo, vale em qualquer sessão/computador)
+- **Seja direto ao ponto.** Diga o que ele precisa fazer e **por que**, e vá direto à lógica completa da tarefa, sem rodeios, sem voltas e sem perguntas no meio do caminho.
+- **Não precisa fazer o código compilar a cada passo.** Pode ficar com erros até a lógica estar toda escrita. Não crie etapas intermediárias só para compilar (nada de `TODO()` só para testar).
+- **Só teste no dispositivo quando for realmente importante** (ex.: validar o offline, o fluxo completo). Não teste a cada mudança pequena.
+- **Exemplos curtos e focados**, de outro assunto, só quando ajudam a entender uma ideia nova. Sem classes de apoio que ele precise lembrar de remover depois.
+- Perguntas conceituais e de entrevista só **depois** que o arquivo estiver correto (ou no fim da fase). Enquanto houver erros no código, só as correções.
+- O Ricardo continua digitando o código no projeto. Quando ele pedir a lógica, explique-a e mostre o trecho no chat com a explicação do porquê; depois peça que ele explique com as próprias palavras.
+
 ### Exceções permitidas
 Você pode fornecer diretamente, sem a escada de ajuda:
 - Linhas de dependência do Gradle (`libs.versions.toml` e `build.gradle.kts`) e configuração de plugins, explicando para que serve cada uma.
