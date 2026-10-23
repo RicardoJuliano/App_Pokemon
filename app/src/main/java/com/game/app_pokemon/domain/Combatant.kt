@@ -5,6 +5,7 @@ import kotlin.math.min
 
 data class Combatant(
     val name: String,
+    val imageUrl: String,
     val hp: Int,
     val attack: Int,
     val defense: Int,

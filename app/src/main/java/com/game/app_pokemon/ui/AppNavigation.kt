@@ -33,17 +33,24 @@ fun AppNavigation() {
         composable("battle") {
             when (val current = gameState) {
                 is GameState.Playing -> BattleScreen(
-                    player = Fighter(current.player.name, current.player.currentHp, current.player.hpMax),
+                    player = Fighter(
+                        current.player.name,
+                        current.player.currentHp,
+                        current.player.hpMax,
+                        current.player.imageUrl
+                    ),
                     opponent = Fighter(
                         current.opponent.combatant.name,
                         current.opponent.combatant.currentHp,
-                        current.opponent.combatant.hpMax
+                        current.opponent.combatant.hpMax,
+                        current.opponent.combatant.imageUrl
                     ),
                     log = current.log,
                     onAttack = { gameViewModel.onAction(BattleAction.PhysicalAttack) },
                     onSpecialAttack = { gameViewModel.onAction(BattleAction.SpecialAttack) },
                     onHeal = { gameViewModel.onAction(BattleAction.Heal) }
                 )
+
                 is GameState.Finished -> LaunchedEffect(Unit) { navController.navigate("result") }
                 GameState.NotStarted -> Text("Carregando...")
             }
