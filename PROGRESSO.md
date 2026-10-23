@@ -1,9 +1,9 @@
 # PROGRESSO — Desafio Pokémon Android
 
 ## Estado atual
-- **Dia 4 em andamento — motor de batalha escrito (sem testes por decisão dele); falta ligar ao jogo (adversários, estado da partida, telas)**
-- Progresso estimado do projeto: ~65%
-- O app hoje: lista dos 151 offline com imagens, tela de erro com retry. No `domain`: `Combatant`, `DamageCalculator`, `BattleAction` e `BattleEngine` (ações, IA do adversário, turno completo). Batalha e resultado na tela ainda usam dados falsos (motor ainda não está ligado às telas).
+- **Dia 4 fechado — jogo completo funcionando no PAX (lista, escolha, 3 batalhas, Vitória/Game over, jogar de novo, offline); falta entrega (Dia 5): README, APK e release**
+- Progresso estimado do projeto: ~85%
+- O app hoje: lista dos 151 offline com imagens e tela de erro com retry; ao escolher um Pokémon, 3 batalhas contra adversários sorteados (foto, barra de vida, faixa de dano e curas nos botões, log); a vida do jogador não é restaurada entre as batalhas (as curas voltam a 3); Vitória ou Game over; "Jogar de novo" recomeça do zero. Validado por ele no aparelho.
 
 ## Tarefas concluídas
 **Dia 1**
@@ -41,14 +41,19 @@
 - [x] `DamageCalculator` com `Random` injetável e `toDouble()` antes da divisão
 - [x] `BattleAction` (`sealed interface`)
 - [x] `BattleEngine`: `performAction`, IA do adversário (cura abaixo de 30%) e `playTurn` (ordem por `speed`, `TurnResult`, `BattleOutcome`)
+- [x] `Pokemon` com os 6 atributos e `toDomain()` completo; preview da lista removido
+- [x] `BattleSetup`: `toCombatant` (vida cheia) e `OpponentGenerator` (3 adversários sem repetir o do jogador)
+- [x] `GameState` e `GameViewModel` (partida inteira); `AppNavigation` ligado ao jogo
+- [x] Foto dos Pokémon e barra de vida na tela de batalha
+- [x] Faixa de dano e curas restantes nos botões (`DamageCalculator.range`, `previewDamage`)
+- [x] Fluxo completo validado no PAX
 - [ ] Testes do motor (adiados por decisão dele; voltar se sobrar tempo)
 
-## Próxima tarefa
-1. Ligar o motor ao jogo: dar os atributos ao `Pokemon` da lista e converter para `Combatant`.
-2. Gerar os 3 adversários (nomes inventados, Pokémon sorteados sem repetir o do jogador).
-3. ViewModel da partida (batalha atual, nº da batalha, log) e telas de batalha, vitória e Game Over com dados reais.
-4. Decidir e documentar no README se o HP do jogador é restaurado entre batalhas.
-5. Pendentes menores: `require(amount >= 0)` no `takeDamage`; `defense = 0`; re-testar modo avião após ~10 min; `.idea/` no `.gitignore`.
+## Próxima tarefa (Dia 5: entrega)
+1. Re-testar o modo avião depois de uns 10 a 15 min (cache das imagens do Coil).
+2. Gerar o APK e anexar numa release do GitHub.
+3. README: prints, como rodar, stack, arquitetura, fluxogramas (dados/offline e jogo, em Mermaid), fórmula de batalha, decisões e melhorias futuras.
+4. Opcionais se sobrar tempo: testes do motor, `require(amount >= 0)` no `takeDamage`, `defense = 0`, `.idea/` no `.gitignore`, o texto piscando no "Jogar de novo", nome do jogador digitado, mesclar a branch `docs/comentarios` na `main` ao final.
 
 ## Conceitos
 **Dominados:** Kotlin básico, noções de frontend (JS/React), state hoisting, navegação, DTOs e Retrofit básico, estados com `sealed interface`, diferença entre `suspend` e `runBlocking`
@@ -60,6 +65,8 @@
 **A reforçar (erros do quiz):** recomposição (só reexecuta quem lê o estado), `suspend` = não bloqueia a thread (não é cache), `@Entity` = tabela (DTO = JSON), `OnConflictStrategy.REPLACE` = substitui a linha inteira, Coil `execute()` devolve `ErrorResult` sem lançar (por isso o `throw`); `launch` também propaga erro ao `coroutineScope` (não é `async` que traz o erro)
 
 **Dia 4 — a reforçar:** `Int / Int` corta a parte decimal (usar `toDouble()` antes); campo errado em `copy` (`hp` x `currentHp`); copiar exemplo sem adaptar (valores e nomes); `when` com `=` devolve valor, com `{}` precisa de `return`; classes e objetos em PascalCase
+
+**Dia 4 — dominado na prática:** `Combatant` imutável com `copy`, `sealed interface` com `when`, ViewModel com estado de partida, navegação ligada ao estado
 
 **Antigos a reforçar:** sintaxe do cabeçalho de classe (parâmetros do construtor x corpo), `by lazy`, `private` no container (expor o mínimo), `collectAsState`, coroutines (`viewModelScope`), por que testar com valores distintos, injeção de dependência
 
@@ -82,6 +89,11 @@
 - Empate de `speed`: o jogador age primeiro.
 - Sem curas: `heal()` devolve o próprio lutador (situação normal); o log diz que não há curas.
 - Testes do motor adiados por decisão dele (prioridade: fluxo completo).
+- A vida do jogador NÃO é restaurada entre as batalhas; as curas voltam a 3 a cada batalha (decisão dele; documentar no README).
+- Fotos dos Pokémon na batalha: o `Combatant` leva o `imageUrl` do `Pokemon`; a tela usa o modelo simples `Fighter`.
+- Faixa de dano nos botões (mostra mínimo e máximo, por causa do sorteio 0,85 a 1,0).
+- Um único `GameViewModel` na `AppNavigation`, compartilhado pelas três telas.
+- Ideia para melhoria futura: o jogador digitar o próprio nome.
 - Estilo de condução direto registrado no `CLAUDE.md` e nas preferências (lógica completa, sem etapas só para compilar).
 
 ## Dificuldades e aprendizados
