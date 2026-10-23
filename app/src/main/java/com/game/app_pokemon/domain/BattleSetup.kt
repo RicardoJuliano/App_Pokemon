@@ -4,8 +4,8 @@ import kotlin.random.Random
 
 
 
-private const val HEALS_PER_BATTLE = 3
-private const val OPPONENTS_COUNT = 3
+const val HEALS_PER_BATTLE = 3
+const val OPPONENTS_COUNT = 3
 
 private val trainerNames = listOf("Rafa", "Marina", "Tião", "Duda", "Bia", "Caio", "Léo", "Nina")
 
