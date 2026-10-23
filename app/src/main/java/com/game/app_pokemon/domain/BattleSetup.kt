@@ -18,6 +18,7 @@ fun Pokemon.toCombatant(healsLeft: Int = HEALS_PER_BATTLE): Combatant {
 
     val rested = Combatant(
         name = name,
+        imageUrl = imageUrl,
         hp = hp,
         attack = attack,
         defense = defense,

@@ -7,6 +7,8 @@ import kotlin.math.min
 // Como o objeto original não muda, fica mais fácil prever o estado e testar (parecido com o estado no React).
 data class Combatant(
     val name: String,
+    // Endereço da imagem, vindo do Pokémon, para a tela de batalha mostrar a foto.
+    val imageUrl: String,
     val hp: Int,
     val attack: Int,
     val defense: Int,

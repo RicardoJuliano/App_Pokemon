@@ -39,18 +39,25 @@ fun AppNavigation() {
             // Cada estado do jogo vira uma tela diferente (when sobre a sealed interface, sem else).
             when (val current = gameState) {
                 is GameState.Playing -> BattleScreen(
-                    // Fighter é o modelo simples que a tela usa (nome, vida atual, vida máxima); convertemos do Combatant.
-                    player = Fighter(current.player.name, current.player.currentHp, current.player.hpMax),
+                    // Fighter é o modelo simples que a tela usa; convertemos do Combatant.
+                    player = Fighter(
+                        current.player.name,
+                        current.player.currentHp,
+                        current.player.hpMax,
+                        current.player.imageUrl
+                    ),
                     opponent = Fighter(
                         current.opponent.combatant.name,
                         current.opponent.combatant.currentHp,
-                        current.opponent.combatant.hpMax
+                        current.opponent.combatant.hpMax,
+                        current.opponent.combatant.imageUrl
                     ),
                     log = current.log,
                     onAttack = { gameViewModel.onAction(BattleAction.PhysicalAttack) },
                     onSpecialAttack = { gameViewModel.onAction(BattleAction.SpecialAttack) },
                     onHeal = { gameViewModel.onAction(BattleAction.Heal) }
                 )
+
                 // LaunchedEffect(Unit) roda uma vez ao entrar nesta tela (parecido com useEffect com array vazio): vai para o resultado.
                 is GameState.Finished -> LaunchedEffect(Unit) { navController.navigate("result") }
                 GameState.NotStarted -> Text("Carregando...")

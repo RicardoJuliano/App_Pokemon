@@ -49,19 +49,3 @@ fun BattleScreen(
 
 }
 
-@Preview(showBackground = true)
-@Composable
-fun BattleScreenPreview() {
-    App_PokemonTheme() {
-        Surface {
-            BattleScreen(
-                player = Fighter("Jogador", 100, 100),
-                opponent = Fighter("Oponente", 80, 100),
-                log = listOf("Log da batalha"),
-                onAttack = {},
-                onSpecialAttack = {},
-                onHeal = {}
-            )
-        }
-    }
-}
