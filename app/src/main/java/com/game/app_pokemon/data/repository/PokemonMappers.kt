@@ -30,10 +30,16 @@ fun PokemonDetailDto.toEntity(): PokemonEntity {
 }
 
 
-// Entity -> Pokemon: a lista só precisa de id e nome, então os outros 7 campos ficam de fora por enquanto.
+// Entity -> Pokemon: leva os 6 atributos de batalha; só os tipos ficam de fora (a tela e o jogo não usam).
 fun PokemonEntity.toDomain(): Pokemon {
     return Pokemon(
-        id= id,
-        name = name
+        id = id,
+        name = name,
+        hp = hp,
+        attack = attack,
+        defense = defense,
+        specialAttack = specialAttack,
+        specialDefense = specialDefense,
+        speed = speed
     )
 }
