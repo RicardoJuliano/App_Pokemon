@@ -24,8 +24,14 @@ fun PokemonDetailDto.toEntity(): PokemonEntity {
 
 fun PokemonEntity.toDomain(): Pokemon {
     return Pokemon(
-        id= id,
-        name = name
+        id = id,
+        name = name,
+        hp = hp,
+        attack = attack,
+        defense = defense,
+        specialAttack = specialAttack,
+        specialDefense = specialDefense,
+        speed = speed
     )
 }
 
