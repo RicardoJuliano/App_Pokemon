@@ -17,6 +17,7 @@ object AppViewModelProvider {
             // Pega o Repository do container da Application: é o mesmo para todas as telas.
             ListViewModel(pokemonApplication().container.pokemonRepository)
         }
+        // Segundo ViewModel: o da partida, que recebe o Repository, o motor de batalha e o gerador de adversários.
         initializer {
             val container = pokemonApplication().container
             GameViewModel(

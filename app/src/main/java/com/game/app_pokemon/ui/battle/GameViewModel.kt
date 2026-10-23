@@ -16,6 +16,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
+// Guarda a partida inteira. As telas só observam o state e avisam os cliques (startGame, onAction).
+// Quem faz a conta da batalha é o BattleEngine (Kotlin puro).
 class GameViewModel(
     private val repository: PokemonRepository,
     private val engine: BattleEngine,
@@ -25,8 +27,10 @@ class GameViewModel(
     private val _state = MutableStateFlow<GameState>(GameState.NotStarted)
     val state: StateFlow<GameState> = _state
 
+    // Os 3 adversários sorteados no início da partida.
     private var opponents: List<Opponent> = emptyList()
 
+    // Sorteia os adversários e começa na batalha 1 com o Pokémon escolhido (vida cheia).
     fun startGame(playerPokemon: Pokemon) {
         viewModelScope.launch {
             val allPokemons = repository.getPokemons()
@@ -40,6 +44,8 @@ class GameViewModel(
         }
     }
 
+    // Executa um turno com a ação escolhida e decide o próximo estado.
+    // `as? ... ?: return`: se não estiver jogando, não faz nada.
     fun onAction(action: BattleAction) {
         val current = _state.value as? GameState.Playing ?: return
         val turn = engine.playTurn(current.player, current.opponent.combatant, action)
@@ -53,6 +59,7 @@ class GameViewModel(
             )
             BattleOutcome.OPPONENT_WON -> GameState.Finished(won = false, log = log + "Game over!")
             BattleOutcome.PLAYER_WON -> {
+                // Venceu a 3ª: fim. Senão, próxima batalha com a vida que sobrou (não restaura) e as curas renovadas.
                 if (current.battleNumber == OPPONENTS_COUNT) {
                     GameState.Finished(won = true, log = log + "Você venceu as 3 batalhas!")
                 } else {
@@ -68,6 +75,7 @@ class GameViewModel(
         }
     }
 
+    // Volta ao início para jogar de novo.
     fun reset() {
         _state.value = GameState.NotStarted
     }
