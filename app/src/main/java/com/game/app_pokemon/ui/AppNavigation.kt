@@ -39,6 +39,10 @@ fun AppNavigation() {
             // Cada estado do jogo vira uma tela diferente (when sobre a sealed interface, sem else).
             when (val current = gameState) {
                 is GameState.Playing -> BattleScreen(
+                    // Faixa de dano e curas restantes aparecem nos botões.
+                    physicalDamage = gameViewModel.previewDamage(BattleAction.PhysicalAttack),
+                    specialDamage = gameViewModel.previewDamage(BattleAction.SpecialAttack),
+                    healsLeft = current.player.healsLeft,
                     // Fighter é o modelo simples que a tela usa; convertemos do Combatant.
                     player = Fighter(
                         current.player.name,

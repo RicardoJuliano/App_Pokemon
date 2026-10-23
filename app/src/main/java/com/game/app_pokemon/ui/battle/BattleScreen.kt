@@ -19,10 +19,18 @@ import androidx.compose.ui.unit.dp
 import com.game.app_pokemon.domain.Fighter
 import com.game.app_pokemon.ui.theme.App_PokemonTheme
 
+// Tela de batalha: só desenha o que recebe (stateless) e avisa os cliques por callback.
 @Composable
 fun BattleScreen(
-    player: Fighter, opponent: Fighter, log: List<String>,
-    onAttack: () -> Unit, onSpecialAttack: () -> Unit, onHeal: () -> Unit
+    player: Fighter,
+    opponent: Fighter,
+    log: List<String>,
+    physicalDamage: IntRange?,
+    specialDamage: IntRange?,
+    healsLeft: Int,
+    onAttack: () -> Unit,
+    onSpecialAttack: () -> Unit,
+    onHeal: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -33,19 +41,23 @@ fun BattleScreen(
         FighterCard(player)
         FighterCard(opponent)
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            Button(onClick = onAttack, modifier = Modifier.weight(1f)) { Text("Atacar") }
-            Button(
-                onClick = onSpecialAttack,
-                modifier = Modifier.weight(1f)
-            ) { Text("Ataque Especial") }
-            Button(onClick = onHeal, modifier = Modifier.weight(1f)) { Text("Curar") }
+            Button(onClick = onAttack, modifier = Modifier.weight(1f)) {
+                Text("Atacar${rangeText(physicalDamage)}")
+            }
+            Button(onClick = onSpecialAttack, modifier = Modifier.weight(1f)) {
+                Text("Especial${rangeText(specialDamage)}")
+            }
+            Button(onClick = onHeal, modifier = Modifier.weight(1f)) {
+                Text("Curar ($healsLeft)")
+            }
         }
         Text("Registro", style = MaterialTheme.typography.titleSmall)
         LazyColumn(modifier = Modifier.weight(1f)) {
             items(log) { Text(it) }
         }
     }
-
-
 }
 
+// Texto da faixa de dano no botão (ex.: " (28–33)"); sem faixa (cura), não mostra nada.
+private fun rangeText(range: IntRange?): String =
+    if (range == null) "" else " (${range.first}–${range.last})"

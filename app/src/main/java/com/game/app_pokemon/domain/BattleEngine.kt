@@ -27,6 +27,26 @@ class BattleEngine(
     private val damageCalculator: DamageCalculator,
     private val random: Random
 ) {
+
+
+    // Faixa de dano de uma ação, para mostrar nos botões. A cura não causa dano: devolve null (IntRange? = pode ser nulo).
+    fun previewDamage(actor: Combatant, target: Combatant, action: BattleAction): IntRange? =
+        when (action) {
+            BattleAction.PhysicalAttack -> damageCalculator.range(
+                actor.attack,
+                target.defense,
+                ATTACK_POWER
+            )
+
+            BattleAction.SpecialAttack -> damageCalculator.range(
+                actor.specialAttack,
+                target.specialDefense,
+                ATTACK_POWER
+            )
+
+            BattleAction.Heal -> null
+        }
+
     // Executa uma ação e devolve o resultado. O when sobre a sealed interface não tem else:
     // o compilador sabe que as três ações cobrem tudo. Nada é alterado no lugar: sempre cópias novas.
     fun performAction(actor: Combatant, target: Combatant, action: BattleAction): ActionResult =
@@ -88,18 +108,30 @@ class BattleEngine(
         if (player.speed >= opponent.speed) {
             val first = performAction(player, opponent, playerAction)
             if (first.target.isFainted) {
-                return TurnResult(first.actor, first.target, listOf(first.log), BattleOutcome.PLAYER_WON)
+                return TurnResult(
+                    first.actor,
+                    first.target,
+                    listOf(first.log),
+                    BattleOutcome.PLAYER_WON
+                )
             }
             val second = performAction(first.target, first.actor, opponentAction)
-            val outcome = if (second.target.isFainted) BattleOutcome.OPPONENT_WON else BattleOutcome.ONGOING
+            val outcome =
+                if (second.target.isFainted) BattleOutcome.OPPONENT_WON else BattleOutcome.ONGOING
             return TurnResult(second.target, second.actor, listOf(first.log, second.log), outcome)
         } else {
             val first = performAction(opponent, player, opponentAction)
-            if (first.target.isFainted){
-                return TurnResult(first.target, first.actor, listOf(first.log), BattleOutcome.OPPONENT_WON)
+            if (first.target.isFainted) {
+                return TurnResult(
+                    first.target,
+                    first.actor,
+                    listOf(first.log),
+                    BattleOutcome.OPPONENT_WON
+                )
             }
             val second = performAction(first.target, first.actor, playerAction)
-            val outcome = if (second.target.isFainted) BattleOutcome.PLAYER_WON else BattleOutcome.ONGOING
+            val outcome =
+                if (second.target.isFainted) BattleOutcome.PLAYER_WON else BattleOutcome.ONGOING
             return TurnResult(second.actor, second.target, listOf(first.log, second.log), outcome)
         }
     }

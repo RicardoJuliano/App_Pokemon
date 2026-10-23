@@ -24,6 +24,12 @@ class GameViewModel(
     private val opponentGenerator: OpponentGenerator
 ) : ViewModel() {
 
+    // Faixa de dano de uma ação contra o adversário atual (para os botões da tela).
+    fun previewDamage(action: BattleAction): IntRange? {
+        val current = _state.value as? GameState.Playing ?: return null
+        return engine.previewDamage(current.player, current.opponent.combatant, action)
+    }
+
     private val _state = MutableStateFlow<GameState>(GameState.NotStarted)
     val state: StateFlow<GameState> = _state
 
