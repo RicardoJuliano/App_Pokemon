@@ -5,6 +5,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.game.app_pokemon.PokemonApp
+import com.game.app_pokemon.ui.battle.GameViewModel
 import com.game.app_pokemon.ui.list.ListViewModel
 
 
@@ -16,7 +17,16 @@ object AppViewModelProvider {
             // Pega o Repository do container da Application: é o mesmo para todas as telas.
             ListViewModel(pokemonApplication().container.pokemonRepository)
         }
+        initializer {
+            val container = pokemonApplication().container
+            GameViewModel(
+                container.pokemonRepository,
+                container.battleEngine,
+                container.opponentGenerator
+            )
+        }
     }
+
 
 
 }

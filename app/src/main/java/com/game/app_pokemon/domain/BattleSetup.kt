@@ -6,8 +6,9 @@ import kotlin.random.Random
 
 // Constantes (const val) usam MAIÚSCULAS_COM_UNDERLINE: valores fixos do jogo, sem números soltos no código.
 // As curas voltam a este valor a cada batalha; a vida do jogador NÃO é restaurada entre as batalhas (decisão do projeto).
-private const val HEALS_PER_BATTLE = 3
-private const val OPPONENTS_COUNT = 3
+// Públicas porque o GameViewModel também usa.
+const val HEALS_PER_BATTLE = 3
+const val OPPONENTS_COUNT = 3
 
 private val trainerNames = listOf("Rafa", "Marina", "Tião", "Duda", "Bia", "Caio", "Léo", "Nina")
 
