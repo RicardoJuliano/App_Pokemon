@@ -1,8 +1,8 @@
 # PROGRESSO — Desafio Pokémon Android
 
 ## Estado atual
-- **Dia 5: APK publicado na release v1.0, teste offline ok e README com prints pronto; falta só revisão final**
-- Progresso estimado do projeto: ~95%
+- **Dia 5: APK publicado na release v1.0, teste offline ok e README com prints pronto; comentários explicativos mesclados na main; projeto concluído**
+- Progresso estimado do projeto: 100%
 - O app hoje: lista dos 151 offline com imagens e tela de erro com retry; ao escolher um Pokémon, 3 batalhas contra adversários sorteados (foto, barra de vida, faixa de dano e curas nos botões, log); a vida do jogador não é restaurada entre as batalhas (as curas voltam a 3); Vitória ou Game over; "Jogar de novo" recomeça do zero. Validado por ele no aparelho.
 
 ## Tarefas concluídas
