@@ -22,6 +22,11 @@ class GameViewModel(
     private val opponentGenerator: OpponentGenerator
 ) : ViewModel() {
 
+    fun previewDamage(action: BattleAction): IntRange? {
+        val current = _state.value as? GameState.Playing ?: return null
+        return engine.previewDamage(current.player, current.opponent.combatant, action)
+    }
+
     private val _state = MutableStateFlow<GameState>(GameState.NotStarted)
     val state: StateFlow<GameState> = _state
 

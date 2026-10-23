@@ -33,6 +33,9 @@ fun AppNavigation() {
         composable("battle") {
             when (val current = gameState) {
                 is GameState.Playing -> BattleScreen(
+                    physicalDamage = gameViewModel.previewDamage(BattleAction.PhysicalAttack),
+                    specialDamage = gameViewModel.previewDamage(BattleAction.SpecialAttack),
+                    healsLeft = current.player.healsLeft,
                     player = Fighter(
                         current.player.name,
                         current.player.currentHp,
